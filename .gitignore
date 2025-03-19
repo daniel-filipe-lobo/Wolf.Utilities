@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Wolf.Utilities/bin/Debug/net9.0
+/Wolf.Utilities/obj
