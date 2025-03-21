@@ -12,10 +12,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-lateste
-    permissions:
-      contents: read
-      packages: write
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
