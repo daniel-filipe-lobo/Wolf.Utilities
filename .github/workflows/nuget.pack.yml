@@ -13,9 +13,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-lateste
-    permissions: 
-      packages: write
-      contents: read
 
     steps:
       - name: Checkout repository
