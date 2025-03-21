@@ -39,7 +39,7 @@ jobs:
           #dotnet nuget add source --username ${{ github.repository_owner }} --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
         run: |
           dotnet pack --configuration Release --output ./nupkgs
-          dotnet nuget push .\nupkgs\*.nupkg -k $GITHUB_TOKEN -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --skip-duplicate --no-symbols 
+          dotnet nuget push .\nupkgs\*.nupkg --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -k $GITHUB_TOKEN --skip-duplicate --no-symbols 
     
           #dotnet nuget push .\nupkgs\*.nupkg --source github --api-key $GITHUB_TOKEN
       #- name: Build solution and generate NuGet package
