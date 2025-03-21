@@ -7,12 +7,15 @@ on:
   pull_request:
     branches:
       - main
-env:
+env:e
   project_path: /home/runner/work/Wolf.Utilities/Wolf.Utilities
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-lateste
+    permissions: 
+      packages: write
+      contents: read
 
     steps:
       - name: Checkout repository
