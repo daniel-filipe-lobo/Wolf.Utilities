@@ -34,7 +34,7 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: NuGet pack
-        run:   --no-build --configuration Release --output ./nupkgs
+        run: dotnet pack --no-build --configuration Release --output ./nupkgs
           
       - name: NuGet add source
         run: |
