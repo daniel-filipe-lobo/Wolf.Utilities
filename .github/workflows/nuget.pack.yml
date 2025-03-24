@@ -34,10 +34,15 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: NuGet pack
-        run: dotnet pack --no-build --configuration Release --output ./nupkgs
+        run:   --no-build --configuration Release --output ./nupkgs
           
       - name: NuGet add source
-        run: dotnet nuget add source --username ${{ env.USERNAME }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ env.USERNAME }}/index.json"
+        run: |
+          $hasSource = dotnet nuget list source | Select-String -Pattern 'github2' -CaseSensitive -SimpleMatch
+          if ($hasSource.Count -gt 0)
+          {
+            dotnet nuget add source --username ${{ env.USERNAME }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ env.USERNAME }}/index.json"
+          }
 
       - name: NuGet push
         run: dotnet nuget push .\nupkgs\*.nupkg --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
