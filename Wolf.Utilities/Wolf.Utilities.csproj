@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Wolf.Utilities</Title>
-    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <AssemblyVersion>1.0.0.2</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
 	<VersionPrefix>$(AssemblyVersion)</VersionPrefix>
   </PropertyGroup>
