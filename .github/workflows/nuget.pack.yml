@@ -14,6 +14,10 @@ jobs:
   build:
     runs-on: self-hosted
 
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub Actions
+      USERNAME: daniel-filipe-lobo
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,9 +41,6 @@ jobs:
           dotnet pack --configuration Release --output ./nupkgs
           
       - name: NuGet Add Source
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub Actions
-          USERNAME: daniel-filipe-lobo
         run: |
           dotnet nuget add source --username $USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/$USERNAME/index.json"
           dotnet nuget push .\nupkgs\*.nupkg --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
