@@ -1,7 +1,6 @@
-﻿namespace Wolf.Utilities
+﻿namespace Wolf.Utilities;
+
+public interface IExceptionFactory
 {
-	public interface IExceptionFactory
-	{
-		public Exception Create(string? message, Exception innerException);
-	}
+	public Exception Create(string? message, Exception innerException);
 }
