@@ -1,7 +1,12 @@
-﻿namespace Wolf.Utilities;
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Wolf.Utilities;
 
 public static partial class StringExtensions
 {
+	[GeneratedRegex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")]
+	private static partial Regex EmailRegex();
+
 	public static string EscapeBraces(this string text)
 	{
 		return text.Replace("{", "{{").Replace("}", "}}");
@@ -64,96 +69,14 @@ public static partial class StringExtensions
 		return Diacritics(text, isRemove: false).HasDiacritics;
 	}
 
-	public static int CalculateEditDistance(this string currentString, string secondString, int maxAllowedDistance)
-	{
-		string firstString = currentString;
-
-		int firstStringLength = firstString.Length;
-		int secondStringLength = secondString.Length;
-
-		if (firstStringLength == 0)
-			return secondStringLength;
-
-		if (secondStringLength == 0) return firstStringLength;
-
-		if (firstStringLength > secondStringLength)
-		{
-			(secondString, firstString) = (firstString, secondString);
-			firstStringLength = secondStringLength;
-			secondStringLength = secondString.Length;
-		}
-
-		int[] currentRow = new int[firstStringLength + 1];
-		int[] previousRow = new int[firstStringLength + 1];
-		int[] transpositionRow = new int[firstStringLength + 1];
-
-		if (maxAllowedDistance < 0) maxAllowedDistance = secondStringLength;
-		if (secondStringLength - firstStringLength > maxAllowedDistance) return maxAllowedDistance + 1;
-
-		for (int i = 0; i <= firstStringLength; i++)
-			previousRow[i] = i;
-
-		char secondStringLastCheckedChar = default;
-		for (int i = 1; i <= secondStringLength; i++)
-		{
-			char secondStringCharToCheck = secondString[i - 1];
-			currentRow[0] = i;
-
-			// Compute only diagonal stripe of width 2 * (max + 1)
-			int from = Math.Max(i - maxAllowedDistance - 1, 1);
-			int to = Math.Min(i + maxAllowedDistance + 1, firstStringLength);
-
-			char firstStringLastCheckedChar = default;
-			for (int j = from; j <= to; j++)
-			{
-				char firstStringCharToCheck = firstString[j - 1];
-
-				// Compute minimal cost of state change to current state from previous states of deletion, insertion and swapping 
-				int cost = string.Compare(firstStringCharToCheck.ToString(), secondStringCharToCheck.ToString(), CultureInfo.InvariantCulture, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) == 0 ? 0 : 1;
-				int value = Math.Min(Math.Min(currentRow[j - 1] + 1, previousRow[j] + 1), previousRow[j - 1] + cost);
-
-				// If there was transposition, take in account its cost 
-				if (string.Compare(firstStringCharToCheck.ToString(), secondStringLastCheckedChar.ToString(), CultureInfo.InvariantCulture, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) == 0
-					&& string.Compare(firstStringLastCheckedChar.ToString(), secondStringCharToCheck.ToString(), CultureInfo.InvariantCulture, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) == 0)
-				{
-					value = Math.Min(value, transpositionRow[j - 2] + cost);
-				}
-
-				currentRow[j] = value;
-				firstStringLastCheckedChar = firstStringCharToCheck;
-			}
-			secondStringLastCheckedChar = secondStringCharToCheck;
-
-			(currentRow, previousRow, transpositionRow) = (transpositionRow, currentRow, previousRow);
-		}
-
-		return previousRow[firstStringLength];
-	}
-
 	public static bool IsValidEmail([NotNullWhen(true)] this string? email)
 	{
 		return email != null && EmailRegex().Match(email).Success;
 	}
 
-	public static int CountExpressions(this string text)
+	public static string HashSha512ToBase64(this string text)
 	{
-		return GetExpressions(text).Count();
-	}
-
-	public static IEnumerable<string> GetExpressions(this string text)
-	{
-		return ExpressionsRegex().Matches(text).SelectMany(match => match.Captures.Select(expression => expression.Value)) ?? [];
-	}
-
-	[GeneratedRegex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")]
-	private static partial Regex EmailRegex();
-
-	[GeneratedRegex(@""".+?""|\w+")]
-	private static partial Regex ExpressionsRegex();
-
-	public static string HashDataSha512(this string text)
-	{
-		return Encoding.UTF8.GetString(SHA512.HashData(Encoding.UTF8.GetBytes(text)));
+		return Convert.ToBase64String(SHA512.HashData(Encoding.UTF8.GetBytes(text)));
 	}
 
 	public static string GetValidFileName(this string fileName)

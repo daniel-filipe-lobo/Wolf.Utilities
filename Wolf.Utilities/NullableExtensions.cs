@@ -11,15 +11,6 @@ public static class NullableExtensions
 		return value;
 	}
 
-	public static DateTimeOffset ThrowIfIsNull([NotNull] this DateTimeOffset? value, string? name = null)
-	{
-		if (value == null)
-		{
-			throw new Exception($"Value {name} is null");
-		}
-		return value.Value;
-	}
-
 	[return: NotNull]
 	public static T ThrowIfIsNull<T>([NotNull] this T? value, string? name = null)
 		where T : struct
@@ -50,15 +41,5 @@ public static class NullableExtensions
 			throw new Exception($"Value {name} is null");
 		}
 		return (IEnumerable<T>)values;
-	}
-
-	public static IEnumerable<T> ToEmptyIfIsNull<T>(this IEnumerable<T>? values)
-	{
-		return values ?? Enumerable.Empty<T>();
-	}
-
-	public static IEnumerable<T>? ToNullIfIsEmpty<T>(this IEnumerable<T>? values)
-	{
-		return values?.Any() == true ? values : null;
 	}
 }

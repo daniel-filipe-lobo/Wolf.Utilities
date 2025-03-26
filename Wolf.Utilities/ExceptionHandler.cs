@@ -18,7 +18,7 @@ public static class ExceptionHandler<TExceptionFactory>
 		var exceptionFactory = new TExceptionFactory();
 		var tException = exceptionFactory.Create(completeMessage, exception);
 		logger.LogError(tException, completeMessage);
-		return exception;
+		return tException;
 	}
 
 	public static Exception Create(ILogger logger, Exception exception, params (string ParameterName, object? ParameterValue)[] parametersInformation)
